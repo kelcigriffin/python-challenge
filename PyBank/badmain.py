@@ -73,8 +73,3 @@ print(f"Greatest Decrease in Profits: {max_decr_date} (${max_decr})")
      # Read each row of data after the header
 #for row in csvreader:
         #print(row)
-
-
-
-
-
