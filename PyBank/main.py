@@ -53,7 +53,32 @@ print(f"Greatest Increase in Profits: {max_incr_date} (${max_incr})")
 print(f"Greatest Decrease in Profits: {max_decr_date} (${max_decr})")
 
 
+# report = (
+#     f"{' Financial Analysis ':-^48}\n"
+#     f"{'Total Months:':24}{total_months:24,.0f}\n"
+#     f"{'Net Profits:':24}{net_total:24,.0f}\n"
+#     f"{'Avg Change:':24}{average_change:24,.2f}\n"
+#     f"{'Max Increase:':14}{max_incr[0]:^20}{max_incr[1]:14,.0f}\n"
+#     f"{'Max Decrease:':14}{max_decr[0]:^20}{max_decr[1]:14,.0f}\n"
+#     f"{'--':-^48}"
+# )
+# Specify the file to write to
+output_path = os.path.join(os.path.dirname(__file__), "Analysis", "pybank_analysis.txt")
+# Open the file using "write" mode. Specify the variable to hold the contents
+with open(output_path, 'w') as textfile:
+
+    # Initialize csv.writer
     
+    # Write the first row (column headers)
+    textfile.write("Financial Analysis\n")
+
+    # Write the second row
+    textfile.write(f"Total Months: {total_months}\n")
+    textfile.write(f"{'Total: $'} {net_total:,}\n")
+    textfile.write(f"{'Average Change: '} ${round(average_change,2):,}\n")
+    textfile.write(f"{'Greatest Increase in Profits: '} {max_incr_date} (${max_incr:,})\n")
+    textfile.write(f"{'Greatest Increase in Profits: '} {max_decr_date} (${max_decr:,})\n")
+
     
     
     
