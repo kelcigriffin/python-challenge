@@ -71,7 +71,7 @@ with open(output_path, 'w') as textfile:
     
     # Write the first row (column headers)
     textfile.write("Financial Analysis\n")
-
+    textfile.write("----------------------------\n")
     # Write the second row
     textfile.write(f"Total Months: {total_months}\n")
     textfile.write(f"{'Total: $'} {net_total:,}\n")
