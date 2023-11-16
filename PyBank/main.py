@@ -1,83 +1,72 @@
+#dependencies
 import os
 import csv
 
+#specify the path to collect data from
 pybank_csv = os.path.join("/Users/kelcigriffin/python-challenge/PyBank/Resources/budget_data.csv")
 
-
+#read in the CSV file
 with open(pybank_csv) as csvfile:
+    #define csvreader variable, and split the columns at the commas in the CSV file
+    csvreader = csv.reader(csvfile, delimiter=',')
 
-    # CSV reader specifies delimiter and variable that holds contents
-        csvreader = csv.reader(csvfile, delimiter=',')
+# read the header row first
+    csv_header = next(csvreader)
+    #make the csv file into a list we can pull data from
+    csv_list = list(csvreader)
+    
+# month list
+month_list = [row[0] for row in csv_list]
 
-    # Read the header row first (skip this step if there is no header)
-        next(csvreader)
-        row = next(csvreader)
-        current_amt = int(row[1])
-        first_amt = net_total = current_amt
-        previous_amt = current_amt
+#profit list turns the Profits/Losses column into integers we can work with later
+profit_list = [int(row[1]) for row in csv_list]
 
-        row = next(csvreader)
-        total_months = 2
-        current_amt = int(row[1])
-        net_total= net_total + current_amt
-        amt_diff = current_amt - previous_amt
-        max_incr = max_decr = amt_diff
-        max_incr_date = max_decr_date = row[0]
-        previous_amt = current_amt
+# total months (calculated by using len to count the rows)
+total_months = len(month_list)
 
-        for row in csvreader:
-            total_months = total_months + 1
-            current_amt = int(row[1])
-            net_total= net_total + current_amt
-            amt_diff = current_amt - previous_amt
+# total profit
+total_profit = sum(profit_list)
 
-            if amt_diff > max_incr:
-                  max_incr = amt_diff
-                  max_incr_date = row[0]
+# list of profit changes within the range of months
+profit_change = [profit_list[i] - profit_list[i-1] for i in range(1, total_months)]
 
-            if amt_diff < max_decr:
-                 max_decr = amt_diff
-                 max_decr_date = row[0]
-            previous_amt = current_amt
-            
-average_change = (current_amt - first_amt) / (total_months - 1)
+month_change = [month_list[i] for i in range(1, total_months)]
 
+average_change = sum(profit_change)/(total_months-1)
 
+# find greatest increase in profits, and greatest decrease within the range. Define the date variables to correspond with the min/max profit rows
+greatest_increase = max(profit_change)
+for i in range(total_months-1):
+    if profit_change[i]==greatest_increase:
+        greatest_increase_date = month_change[i]
+        
+greatest_decrease = min(profit_change)
+for i in range(total_months-1):
+    if profit_change[i]==greatest_decrease:
+        greatest_decrease_date = month_change[i]
+        
 
+#print output, making sure to round average change to 2 decimal points 
 print("Financial Analysis")     
 print("----------------------------")       
 print(f"Total Months: "+ str(total_months))
-print(f"Total: $" + str(net_total))
+print(f"Total: $" + str(total_profit))
 print(f"Average Change: $ {round(average_change,2)}")
-print(f"Greatest Increase in Profits: {max_incr_date} (${max_incr})")
-print(f"Greatest Decrease in Profits: {max_decr_date} (${max_decr})")
+print(f"Greatest Increase in Profits: {greatest_increase_date} (${greatest_increase})")
+print(f"Greatest Decrease in Profits: {greatest_increase_date} (${greatest_decrease})")
 
-
-# report = (
-#     f"{' Financial Analysis ':-^48}\n"
-#     f"{'Total Months:':24}{total_months:24,.0f}\n"
-#     f"{'Net Profits:':24}{net_total:24,.0f}\n"
-#     f"{'Avg Change:':24}{average_change:24,.2f}\n"
-#     f"{'Max Increase:':14}{max_incr[0]:^20}{max_incr[1]:14,.0f}\n"
-#     f"{'Max Decrease:':14}{max_decr[0]:^20}{max_decr[1]:14,.0f}\n"
-#     f"{'--':-^48}"
-# )
-# Specify the file to write to
+# Specify the file path to write new file called "pybank_analysis.txt" into
 output_path = os.path.join(os.path.dirname(__file__), "Analysis", "pybank_analysis.txt")
-# Open the file using "write" mode. Specify the variable to hold the contents
+# Open the file using "write" mode. Specify the variable to hold the contents as textfile
 with open(output_path, 'w') as textfile:
-
-    # Initialize csv.writer
-    
-    # Write the first row (column headers)
+    # Write the txt 
     textfile.write("Financial Analysis\n")
     textfile.write("----------------------------\n")
-    # Write the second row
     textfile.write(f"Total Months: {total_months}\n")
-    textfile.write(f"{'Total: $'} {net_total:,}\n")
+    textfile.write(f"{'Total: $'} {total_profit:,}\n")
     textfile.write(f"{'Average Change: '} ${round(average_change,2):,}\n")
-    textfile.write(f"{'Greatest Increase in Profits: '} {max_incr_date} (${max_incr:,})\n")
-    textfile.write(f"{'Greatest Increase in Profits: '} {max_decr_date} (${max_decr:,})\n")
+    textfile.write(f"{'Greatest Increase in Profits: '} {greatest_increase_date} (${greatest_increase})\n")
+    textfile.write(f"{'Greatest Increase in Profits: '} {greatest_increase_date} (${greatest_decrease})\n")
 
     
     
@@ -95,11 +84,6 @@ with open(output_path, 'w') as textfile:
     
     
     
-     # Read each row of data after the header
-#for row in csvreader:
-        #print(row)
-
-
-
+     
 
 
